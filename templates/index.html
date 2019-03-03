@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+        <meta name="author" content="Coderthemes">
+        <!-- App Title -->
+        <title>Supplier Management</title>
+
+        <link href="{{ url_for('static', filename='assets/plugins/timepicker/bootstrap-timepicker.min.css') }}" rel="stylesheet">
+		<link href="{{ url_for('static', filename='assets/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
+		<link href="{{ url_for('static', filename='assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
+		<link href="{{ url_for('static', filename='assets/plugins/clockpicker/css/bootstrap-clockpicker.min.css') }}" rel="stylesheet">
+		<link href="{{ url_for('static', filename='assets/plugins/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+
+        <!-- Custom box scc -->
+        <link href="{{ url_for('static', filename='assets/plugins/ladda-buttons/css/ladda-themeless.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ url_for('static', filename='assets/plugins/custombox/css/custombox.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='assets/css/bootstrap.min.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/css/core.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/css/components.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/css/icons.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/css/pages.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/css/menu.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/css/responsive.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/css/sweetalert2.min.css') }}" rel="stylesheet"/>
+
+        <link href="{{ url_for('static', filename='assets/plugins/datatables/jquery.dataTables.min.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/plugins/datatables/buttons.bootstrap.min.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/plugins/datatables/responsive.bootstrap.min.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='assets/plugins/datatables/dataTables.bootstrap.min.css') }}" rel="stylesheet"/>
+        <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet"/>
+
+        <script src="{{ url_for('static', filename='assets/js/modernizr.min.js') }}"></script>
+
+    </head>
+
+
+    <body>
+        <!-- Navigation Bar-->
+        <header id="topnav">
+            <div class="topbar-main">
+                <div class="container">
+
+                    <!-- Logo container-->
+                    <div class="logo">
+                        <a href="#" class="logo"><span>Supplier Management</span></a>
+                    </div>
+                    <!-- End Logo container-->
+                </div>
+            </div>
+        </header>
+        <!-- End Navigation Bar-->
+
+        <div class="wrapper">
+            <div class="container">
+
+                <div class="row">
+                    <button class="fileupload ladda-button btn btn-purple waves-effect waves-light pull-right" id="upload-file">
+                            <span>Upload excel</span>
+                            <input type="file" class="upload" id="excel-upload">
+                    </button>
+                    <h4 class="page-title">Danh sách order</h4>
+                </div>
+
+                <div class="row m-t-15">
+                    <div class="card-box">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form class="form-inline" role="form" id="search-form">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Tracking number" name="tracking_number"/>
+                                    </div>
+                                    <div class="form-group m-l-15">
+                                        <input type="text" class="form-control" placeholder="Tên khách" name="customer_name"/>
+                                    </div>
+                                    <div class="input-group form-group m-l-15">
+                                        <input type="text" class="form-control" placeholder="Từ ngày" id="datepicker1" name="from_date" autocomplete="off">
+                                        <span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>
+                                    </div>
+                                    <div class="input-group form-group m-l-15">
+                                        <input type="text" class="form-control" placeholder="Đến ngày" id="datepicker2" name="to_date" autocomplete="off">
+                                        <span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>
+                                    </div>
+                                    <button id="order-search" type="submit" class="btn btn-default waves-effect waves-light m-l-15">
+                                        Tìm kiếm
+                                    </button>
+                                    <button id="clear-search" class="btn btn-info waves-effect waves-light m-l-5">
+                                        Clear search
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="row m-t-15">
+                            <div class="col-lg-12">
+                                <div class="table-responsive">
+                                    <table id="datatables" class="table table-bordered table-actions-bar">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Tên khách hàng</th>
+                                                <th>Tracking number</th>
+                                                <th>Size</th>
+                                                <th>Số lượng đặt mua</th>
+                                                <th>Ghi chú</th>
+                                                <th>Ngày đặt hàng</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% include 'footer.html' %}
+
+            </div> <!-- end container -->
+        </div>
+        <!-- end wrapper -->
+
+        <!-- jQuery  -->
+        <script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/plugins/moment/moment.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/detect.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/fastclick.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.slimscroll.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.blockUI.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/waves.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/wow.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.nicescroll.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.scrollTo.min.js') }}"></script>
+
+
+        <!-- Modal-Effect -->
+        <script src="{{ url_for('static', filename='assets/plugins/custombox/js/custombox.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/plugins/custombox/js/legacy.min.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='assets/plugins/moment/moment.js') }}"></script>
+     	<script src="{{ url_for('static', filename='assets/plugins/timepicker/bootstrap-timepicker.js') }}"></script>
+     	<script src="{{ url_for('static', filename='assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js') }}"></script>
+     	<script src="{{ url_for('static', filename='assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js') }}"></script>
+     	<script src="{{ url_for('static', filename='assets/plugins/clockpicker/js/bootstrap-clockpicker.min.js') }}"></script>
+     	<script src="{{ url_for('static', filename='assets/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+
+        <!-- App core js -->
+        <script src="{{ url_for('static', filename='assets/js/jquery.core.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/jquery.app.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/sweetalert2.min.js') }}"></script>
+
+        <!-- Notification js -->
+        <script src="{{ url_for('static', filename='assets/plugins/notifyjs/js/notify.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/plugins/notifications/notify-metro.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='assets/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/plugins/datatables/dataTables.bootstrap.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/plugins/datatables/dataTables.buttons.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/plugins/datatables/dataTables.responsive.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/plugins/datatables/responsive.bootstrap.min.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='assets/plugins/ladda-buttons/js/spin.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/plugins/ladda-buttons/js/ladda.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/plugins/ladda-buttons/js/ladda.jquery.min.js') }}"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+
+        {% block footer_scripts %}{% endblock %}
+    </body>
+</html>

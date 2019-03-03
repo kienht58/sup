@@ -1,0 +1,7 @@
+.copy-track, .undo-track {
+    cursor: pointer;
+}
+
+.copied {
+    bgcolor: #4c5667;
+}
