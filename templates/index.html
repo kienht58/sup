@@ -103,9 +103,11 @@
                                                 <th>Tên khách hàng</th>
                                                 <th>Tracking number</th>
                                                 <th>Size</th>
-                                                <th>Số lượng đặt mua</th>
-                                                <th>Ghi chú</th>
+                                                <th>Số lượng</th>
+                                                <th>Shop</th>
                                                 <th>Ngày đặt hàng</th>
+                                                <th>Ghi chú</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -114,6 +116,35 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="full-width-modalLabel" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h4 class="modal-title" id="mail-title">Cập nhật ghi chú</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h4 id="customer-name">asdasd</h4>
+                                        <h4 id="tracking-number">asdasd</h4>
+                                        <h4>Ghi chú</h4>
+                                        <form class="form-horizontal" role="form" id="note-form">
+                                            <input type="hidden" id="row-id" name="row_id" value="" />
+                                            <input type="hidden" id="tracking-info" name="tracking_info" value="" />
+                                            <textarea class="form-control" id="note-info" name="note" rows="10"></textarea>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Đóng</button>
+                                <button type="button" class="btn btn-primary waves-effect waves-light" id="submit-button">Lưu</button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
 
                 {% include 'footer.html' %}
 

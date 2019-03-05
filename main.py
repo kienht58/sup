@@ -20,7 +20,7 @@ ROOT_DIR = os.path.abspath(os.path.join(
     os.path.dirname(__file__),
 ))
 STATIC_FOLDER = os.path.join(ROOT_DIR, 'www', 'static')
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost/sup'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:kienhoang95@localhost/sup'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -71,10 +71,12 @@ def update_records():
             order.customer_name = item['customer']
             order.size = item['orderSize']
             order.quantity = item['quantity']
-            order.price = item['price']
-            order.total_price = item['totalPrice']
-            order.order_date = datetime.strptime(item['orderDate'], '%d/%m/%Y')
-            order.note = item['note']
+
+            if item['orderDate']:
+                order.order_date = datetime.strptime(item['orderDate'],
+                                                     '%d/%m/%Y')
+            order.shop = item['shop']
+
             db.session.add(order)
             db.session.flush()
 
@@ -140,6 +142,19 @@ def datatables():
     })
 
 
+@app.route('/<tracking_number>/note', methods=['POST'])
+def update_note(tracking_number):
+    try:
+        data = request.data
+        order = Order.query.filter(
+            Order.tracking_number == tracking_number).first()
+        order.note = data
+        return jsonify({'message': 'ok'})
+    except Exception as e:
+        _logger.exception(e)
+        return jsonify({'message': 'failed'})
+
+
 class Order(db.Model):
     """
     Contains information of each order from supplier
@@ -155,6 +170,7 @@ class Order(db.Model):
     order_date = db.Column(db.DateTime)
     note = db.Column(db.Text)
     copied = db.Column(db.Boolean, default=False)
+    shop = db.Column(db.Text)
 
     def to_dict(self):
         return {
@@ -167,7 +183,8 @@ class Order(db.Model):
             'customer_name': self.customer_name,
             'order_date': self.order_date,
             'note': self.note,
-            'copied': self.copied
+            'copied': self.copied,
+            'shop': self.shop
         }
 
 

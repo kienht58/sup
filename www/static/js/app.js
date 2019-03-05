@@ -35,16 +35,13 @@ fileUpload.addEventListener("change", function() {
                 var trackingNumber = elem['tracking no'];
 
                 if(trackingNumber) {
-                    console.log(elem['if need Special Instructions'])
                     fileData.push({
                         trackingNumber: trackingNumber,
-                        quantity: elem['Quantity'],
-                        price: elem['Price USD'],
+                        quantity: elem['Quantity'] ? elem['Quantity'] : '',
                         customer: _getCustomerInfo(elem['Shipping Address']),
-                        orderSize: elem['Size'],
-                        totalPrice: elem['Total USD'],
-                        orderDate: _formatDate(elem['Date orders']),
-                        note: elem['if need Special Instructions'] ? elem['if need Special Instructions'] : ''
+                        orderSize: elem['Size'] ? elem['Size'] : '',
+                        orderDate: elem['Date orders'] ? _formatDate(elem['Date orders']) : '',
+                        shop: elem['Shop'] ? elem['Shop'] : ''
                     })
                 }
             })
@@ -138,8 +135,10 @@ $(function () {
             {'data': 'tracking_number'},
             {'data': 'size'},
             {'data': 'quantity'},
+            {'data': 'shop'},
+            {'data': 'order_date'},
             {'data': 'note'},
-            {'data': 'order_date'}
+            {'data': ''}
         ],
         columnDefs: [
             {
@@ -153,6 +152,32 @@ $(function () {
                         '</div>'
                 }
             },
+            {
+                targets: 6,
+                render: function(data, type, row) {
+                    var date = data.split(" ")[0].split('-');
+                    return date[2] + '/' + date[1] + '/' + date[0] + " 00:00:00"
+                }
+            },
+            {
+                targets: -1,
+                render: function(data, type, row) {
+                    var tracking_number = row.tracking_number;
+                    var customer = row.customer_name;
+                    return '' +
+                        '<a class="table-action-btn" title="Edit">' +
+                            '<i ' +
+                        '       class="fa fa-edit text-primary add-note" ' +
+                        '       data-track="' + tracking_number + '"' +
+                        '       data-customer="' + customer + '"' +
+                        '       data-toggle="modal"' +
+                        '       data-target="#myModal"' +
+                        '       data-id="' + row.id + '"' +
+                        '   >' +
+                        '   </i>' +
+                        '</a>'
+                }
+            }
         ],
         createdRow: function(row, data, index) {
             if(data.copied) {
@@ -163,13 +188,6 @@ $(function () {
     });
 });
 
-// function buildActionColumn(data) {
-//     return '' +
-//         '<a class="table-action-btn" title="Edit">' +
-//             '<i class="fa fa-edit text-primary"></i>' +
-//         '</a>'
-// }
-
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -179,6 +197,46 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+$(document).on('click', '.add-note', function() {
+    var trackingNumber = $(this).data('track');
+    var trackElem = $('#tracking-number');
+    trackElem.text('Tracking number:  ' + trackingNumber);
+    var trackingInput = $('#tracking-info');
+    trackingInput.val(trackingNumber);
+
+    var customerName = $(this).data('customer');
+    var customerElem = $('#customer-name');
+    customerElem.text('Tên khách hàng:  ' + customerName);
+
+    var rowIdElem = $('#row-id');
+    var rowId = $(this).data('id');
+    rowIdElem.val(rowId);
+
+    var note = $(this).data('note');
+    var noteElem = $('#note-info');
+    noteElem.val(note);
+});
+
+$('#submit-button').on('click', function(e) {
+    var form = $('#note-form');
+    var data = JSON.parse('{"' + form.serialize().replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+    $.ajax({
+        type: 'POST',
+        url: '/' + data.tracking_info + '/note',
+        contentType: 'application/json',
+        data: data.note,
+        dataType: 'json',
+        success: function() {
+            $('#note-info').val('');
+            datatable.row(data.row_id).draw(false);
+            $('#myModal').modal('toggle');
+        },
+        error: function(e) {
+            console.log(e);
+        }
+    });
+});
 
 $(document).on('click', '.copy-track', function() {
     var rowId = $(this).data('id');
