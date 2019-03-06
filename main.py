@@ -161,7 +161,7 @@ class Order(db.Model):
     """
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    tracking_number = db.Column(db.String(20), unique=True)
+    tracking_number = db.Column(db.String(20))
     quantity = db.Column(db.Integer)
     price = db.Column(db.String(10))
     total_price = db.Column(db.String(10))
