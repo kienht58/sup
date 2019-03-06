@@ -91,9 +91,13 @@ function _getCustomerInfo(str) {
 }
 
 function _formatDate(str) {
-    [month, day, year] = str.split('.');
+    [month, day, year] = str.split(/[ .:;,/]/);
     month = (month < 10) ? '0' + month : month;
     day = (day < 10) ? '0' + day : day;
+    year = (year < 99) ? year : year.substring(2);
+
+    console.log(str);
+    console.log(day + '/' + month + '/' + year);
 
     return day + '/' + month + '/' + year
 }

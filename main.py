@@ -74,7 +74,7 @@ def update_records():
 
             if item['orderDate']:
                 order.order_date = datetime.strptime(item['orderDate'],
-                                                     '%d/%m/%Y')
+                                                     '%d/%m/%y')
             order.shop = item['shop']
 
             db.session.add(order)
