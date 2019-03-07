@@ -2,6 +2,7 @@
 import logging
 import os
 from datetime import datetime
+import dateutil.tz
 
 from flask import Flask, render_template, request, jsonify
 import flask_sqlalchemy as _fs
@@ -160,6 +161,10 @@ class Order(db.Model):
     Contains information of each order from supplier
     """
     __tablename__ = 'orders'
+
+    def _now(self):
+        return datetime.now(tz=dateutil.tz.tzlocal())
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     tracking_number = db.Column(db.String(20))
     quantity = db.Column(db.Integer)
@@ -170,6 +175,7 @@ class Order(db.Model):
     order_date = db.Column(db.DateTime)
     note = db.Column(db.Text)
     copied = db.Column(db.Boolean, default=False)
+    import_date = db.Column(db.TIMESTAMP, default=_now)
     shop = db.Column(db.Text)
 
     def to_dict(self):
@@ -181,7 +187,7 @@ class Order(db.Model):
             'total_price': self.total_price,
             'size': self.size,
             'customer_name': self.customer_name,
-            'order_date': self.order_date,
+            'import_date': self.import_date,
             'note': self.note,
             'copied': self.copied,
             'shop': self.shop
@@ -214,15 +220,15 @@ class OrderListQuery(object):
 
         if from_date:
             self.query = self.query.filter(
-                Order.order_date >= datetime.strptime(from_date, '%m/%d/%Y')
+                Order.import_date >= datetime.strptime(from_date, '%m/%d/%Y')
             )
 
         if to_date:
             self.query = self.query.filter(
-                Order.order_date <= datetime.strptime(to_date, '%m/%d/%Y')
+                Order.import_date <= datetime.strptime(to_date, '%m/%d/%Y')
             )
 
-        self.query = self.query.order_by(desc(Order.order_date))
+        self.query = self.query.order_by(desc(Order.import_date))
 
     def paginate(self, limit, offset):
         self.query = self.query.limit(limit).offset(offset)

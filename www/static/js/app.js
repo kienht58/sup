@@ -140,7 +140,7 @@ $(function () {
             {'data': 'size'},
             {'data': 'quantity'},
             {'data': 'shop'},
-            {'data': 'order_date'},
+            {'data': 'import_date'},
             {'data': 'note'},
             {'data': ''}
         ],
@@ -156,13 +156,13 @@ $(function () {
                         '</div>'
                 }
             },
-            {
-                targets: 6,
-                render: function(data, type, row) {
-                    var date = data.split(" ")[0].split('-');
-                    return date[2] + '/' + date[1] + '/' + date[0] + " 00:00:00"
-                }
-            },
+            // {
+            //     targets: 6,
+            //     render: function(data, type, row) {
+            //         var date = data.split(" ")[0].split('-');
+            //         return date[2] + '/' + date[1] + '/' + date[0] + " 00:00:00"
+            //     }
+            // },
             {
                 targets: -1,
                 render: function(data, type, row) {
